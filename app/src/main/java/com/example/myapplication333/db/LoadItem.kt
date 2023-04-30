@@ -11,5 +11,5 @@ data class LoadItem(
     @ColumnInfo(name = "name")
     var name: String,
     @ColumnInfo(name = "weight")
-    var weight: Float = 0f
+    var weight: String
 )

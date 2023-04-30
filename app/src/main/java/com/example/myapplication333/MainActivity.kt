@@ -2,7 +2,6 @@ package com.example.myapplication333
 
 
 import android.os.Bundle
-import android.util.Log
 import androidx.compose.runtime.remember
 
 import androidx.activity.ComponentActivity
@@ -32,7 +31,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -46,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.myapplication333.db.LoadDB
 import com.example.myapplication333.db.LoadItem
@@ -195,6 +192,9 @@ fun AlertDialogSample() {
 
     var loads = remember { mutableStateListOf<LoadItem>() }
 
+    var name by remember { mutableStateOf("") }
+    var weight by remember { mutableStateOf("") }
+
                         LaunchedEffect(Unit) {
                         scope.launch {
                             withContext(Dispatchers.IO) {
@@ -274,17 +274,19 @@ fun AlertDialogSample() {
 
 
                                 TextField(
-                                    value = text,
+                                    value = name,
                                     onValueChange = {
-                                        text = it
+                                        name = it
                                     },
                                     label = { Text("nazwa:") }
                                 )
 
+
+
                                 TextField(
-                                    value = text,
+                                    value = weight,
                                     onValueChange = {
-                                        text = it
+                                        weight = it
                                     },
                                     label = { Text("kg:") }
                                 )
@@ -303,13 +305,15 @@ fun AlertDialogSample() {
                                         LoadDB::class.java, "load_barbells_db"
                                     ).build()
 
-                                    val item = LoadItem(null, "Grześ", 1.3f)
+                                    val item = LoadItem(null, name, weight)
 
                                     val loadDBDao = db.loadDao()
 
                                     fun main() = runBlocking { // this: CoroutineScope
                                         launch {
                                             loadDBDao.insert(item)
+                                            name = ""
+                                            weight= ""
 
                                          //   var loding:LoadItem= LoadItem(444,"dd",1.0f)
 
@@ -370,7 +374,7 @@ fun AlertDialogSample() {
                                         CoroutineScope(Dispatchers.IO).launch {
                                             val loadDBDao = db.loadDao().getAll()
                                             val list: List<LoadItem> = loadDBDao
-                                            Log.v("testo", "m " + (list.get(0).name))
+                                         //   Log.v("testo", "m " + (list.get(0).name))
                                             //  Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
                                         }
 
