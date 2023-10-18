@@ -2,17 +2,26 @@ package com.example.myapplication333
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.compose.runtime.remember
 
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 
 
 import androidx.compose.foundation.layout.Column
+
+
 import androidx.compose.foundation.layout.Row
+
+
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 
@@ -20,7 +29,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 
 import androidx.compose.material3.Text
@@ -37,7 +45,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Blue
-import androidx.compose.ui.graphics.Color.Companion.Yellow
+
 
 import androidx.compose.ui.text.font.FontWeight
 
@@ -49,6 +57,7 @@ import com.example.myapplication333.db.LoadDB
 import com.example.myapplication333.db.LoadItem
 import com.example.myapplication333.ui.theme.MyApplication333Theme
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -56,17 +65,17 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
-   // private lateinit var loads: List<LoadItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         MyApplication333.setContext(this)
 
-        val db = Room.databaseBuilder(
-            context,
-            LoadDB::class.java, "load_barbells_db"
-        ).build()
+
+//        val db = Room.databaseBuilder(
+//            MyApplication333.getContext(),
+//            LoadDB::class.java, "load_barbells_db"
+//        ).build()
 
 
 
@@ -83,7 +92,8 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-val context = MyApplication333.getContext()
+lateinit var loads: SnapshotStateList<LoadItem>
+//val context = MyApplication333.getContext()
 
 
 @Preview(showBackground = true)
@@ -97,91 +107,158 @@ fun GreetingPreview() {
 //val _loads = mutableStateListOf<LoadItem>()
 
 
-data class Load(val name: String, val credits: Int)
-data class Barbells(val name: String, val credits: Int)
-
-//var loads = listOf(
-//    Load("Cięzarek 1", 125),
-//    Load("Cięzarek 2", 75),
-//    Load("Cięzarek 3", 15),
-//    Load("Cięzarek 4", 87),
-//    Load("Cięzarek 5", 22),
-//    Load("Cięzarek 6", 96),
-//    Load("Cięzarek 7", 125),
-//    Load("Cięzarek 8", 75),
-//    Load("Cięzarek 9", 15),
-//    Load("Cięzarek 10", 87),
-//    Load("Cięzarek 11", 22),
-//    Load("Cięzarek 12", 96),
-//    Load("Zacisk 9", 15),
-//    Load("Zacisk 10", 87),
-//    Load("Zacisk 11", 22),
-//    Load("Zacisk 12", 96),
-//)
+//data class Load(val name: String, val credits: Int)
+//data class Barbells(val name: String, val credits: Int)
 
 
-val barbells = listOf(
-    Barbells("Gryf 1", 125),
-    Barbells("Gryf 2", 125),
-    Barbells("Gryf 3", 125),
-    Barbells("Gryf 4", 125),
-    Barbells("Gryf 5", 125),
-    Barbells("Gryf 6", 125),
+//val barbells = listOf(
+//    Barbells("Gryf 1", 125),
+//    Barbells("Gryf 2", 125),
+//    Barbells("Gryf 3", 125),
+//    Barbells("Gryf 4", 125),
+//    Barbells("Gryf 5", 125),
+//    Barbells("Gryf 6", 125),
+//
+//    )
 
-    )
-
+@OptIn(ExperimentalFoundationApi::class, DelicateCoroutinesApi::class)
 @Composable
 fun LoadRow(loadItem: LoadItem) {
+//    var offsetX by remember { mutableStateOf(0f) }
+    //   val openDialog3 = remember { mutableStateOf(false) }
+    val openDialog3 = remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier
-            .padding(all = 10.dp)
+            .padding(all = 6.dp)
+            .combinedClickable(
+
+
+                onLongClick = {
+
+                    openDialog3.value = true
+                    Toast
+                        .makeText(MyApplication333.getContext(), "long", Toast.LENGTH_SHORT)
+                        .show()
+
+
+                },
+
+                onClick = { })
+
+
     ) {
-        Column(modifier = Modifier.padding(all = 10.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(all = 2.dp)
+                .fillMaxWidth(1f)
+        ) {
             Text(
                 loadItem.name,
-                fontSize = 25.sp,
+                fontSize = 18.sp,
                 fontWeight = FontWeight.W700,
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier.padding(2.dp)
             )
-            Text(loadItem.weight.toString(), color = Color.Gray, modifier = Modifier.padding(10.dp))
+            Text(loadItem.weight, color = Color.Gray, modifier = Modifier.padding(2.dp))
         }
     }
-}
 
-@Composable
-fun LoadRow2(barbells: Barbells) {
-    Card(
-        modifier = Modifier
-            .padding(all = 10.dp)
-    ) {
-        Column(modifier = Modifier.padding(all = 10.dp)) {
-            Text(
-                barbells.name,
-                fontSize = 25.sp,
-                fontWeight = FontWeight.W700,
-                modifier = Modifier.padding(10.dp)
-            )
-            Text(
-                barbells.credits.toString(),
-                color = Color.Gray,
-                modifier = Modifier.padding(10.dp)
-            )
-        }
+    if (openDialog3.value) {
+
+        AlertDialog(
+            onDismissRequest = {
+                openDialog3.value = false
+            },
+            title = {
+                Text(text = "usun")
+            },
+            text = {
+                Column {
+
+
+                }
+            },
+
+            confirmButton = {
+                Button(
+
+                    onClick = {
+                        openDialog3.value = false
+
+                        Toast.makeText(MyApplication333.getContext(), loadItem.name, Toast.LENGTH_SHORT).show()
+
+
+                        val db = Room.databaseBuilder(
+                            MyApplication333.getContext(),
+                            LoadDB::class.java, "load_barbells_db"
+                        ).build()
+
+                        val loadDBDao = db.loadDao()
+
+                        fun main2() = runBlocking { // this: CoroutineScope
+                            launch {
+                                loadDBDao.delete(loadItem)
+
+                            }
+                        }
+                        main2()
+
+
+                        GlobalScope.launch {
+                            val loadDBDao1 = db.loadDao().getAll()
+                            fun main3() = runBlocking { // this: CoroutineScope
+
+                                launch {
+
+                                    loads.swapList(loadDBDao1)
+
+                                }
+                            }
+
+                            main3()
+                        }
+
+
+                    }) {
+                    Text("usun")
+                }
+            },
+            dismissButton = {
+                Button(
+
+                    onClick = {
+                        openDialog3.value = false
+                    }) {
+                    Text("anuluj")
+                }
+            }
+        )
     }
+
 }
 
-fun <T> SnapshotStateList<T>.swapList(newList: List<T>){
+//@Composable
+//fun LoadRow2(content: @Composable RowScope.() -> Unit) {
+//
+//    Row {
+//        content()
+//    }
+//
+//}
+
+
+fun <T> SnapshotStateList<T>.swapList(newList: List<T>) {
     clear()
     addAll(newList)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun AlertDialogSample() {
 
 
     val db = Room.databaseBuilder(
-        context,
+        MyApplication333.getContext(),
         LoadDB::class.java, "load_barbells_db"
     ).build()
 
@@ -190,64 +267,40 @@ fun AlertDialogSample() {
 
     var text by remember { mutableStateOf("0") }
 
-    var loads = remember { mutableStateListOf<LoadItem>() }
+    loads = remember { mutableStateListOf() }
 
     var name by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
 
-                        LaunchedEffect(Unit) {
-                        scope.launch {
-                            withContext(Dispatchers.IO) {
-                                val loadDBDao = db.loadDao().getAll()
-                                val list: List<LoadItem> = loadDBDao
-//                                Log.v("testo", "m " + (list.get(0).name))
-                                loads.swapList(loadDBDao)
-                                //  Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
-                                //testt
-
-                            }
-
-                        }}
+    LaunchedEffect(Unit) {
+        scope.launch {
+            withContext(Dispatchers.IO) {
+                val loadDBDao = db.loadDao().getAll()
+               // val list: List<LoadItem> = loadDBDao
+                loads.swapList(loadDBDao)
 
 
+            }
+
+        }
+    }
 
 
-
-    val context = MyApplication333.getContext()
+//    val context = MyApplication333.getContext()
     MaterialTheme {
-        Column() {
+        Column {
 
 
             Row {
                 val openDialog1 = remember { mutableStateOf(false) }
                 val openDialog2 = remember { mutableStateOf(false) }
 
+
+
                 Button(onClick = {
                     openDialog1.value = true
                 }, modifier = Modifier.padding(8.dp)) {
                     Text("dodaj obciążenie")
-
-//                    val db = Room.databaseBuilder(
-//                        context ,
-//                        LoadDB::class.java, "load_barbells_db"
-//                    ).build()
-//
-//                    val item = LoadItem(null,"Grześ",1.3f)
-//
-//                    item.name = "greg"
-//
-//                    val loadDBDao = db.loadDao()
-//
-//                    val scope = rememberCoroutineScope()
-//
-//                    LaunchedEffect(Unit) {
-//                        scope.launch {
-//                            withContext(Dispatchers.IO) {
-//                                loadDBDao.insert(item)
-//
-//                            }
-//                        }
-//                    }
 
 
                 }
@@ -270,7 +323,7 @@ fun AlertDialogSample() {
                             Text(text = "dodaj obciążenie")
                         },
                         text = {
-                            Column() {
+                            Column {
 
 
                                 TextField(
@@ -300,10 +353,10 @@ fun AlertDialogSample() {
                                     openDialog1.value = false
 
 
-                                    val db = Room.databaseBuilder(
-                                        context,
-                                        LoadDB::class.java, "load_barbells_db"
-                                    ).build()
+//                                    val db = Room.databaseBuilder(
+//                                        context,
+//                                        LoadDB::class.java, "load_barbells_db"
+//                                    ).build()
 
                                     val item = LoadItem(null, name, weight)
 
@@ -313,41 +366,36 @@ fun AlertDialogSample() {
                                         launch {
                                             loadDBDao.insert(item)
                                             name = ""
-                                            weight= ""
+                                            weight = ""
 
-                                         //   var loding:LoadItem= LoadItem(444,"dd",1.0f)
+                                            //   var loding:LoadItem= LoadItem(444,"dd",1.0f)
 
 
-                                         //   _loads.add(loding)
+                                            //   _loads.add(loding)
                                         }
                                     }
 
                                     main()
 
 
-                                //    LaunchedEffect(Unit) {
-                              //  AlertDialogSample()
-                                //    }
+                                    //    LaunchedEffect(Unit) {
+                                    //  AlertDialogSample()
+                                    //    }
 
 
                                     GlobalScope.launch {
-                                    val loadDBDao1 = db.loadDao().getAll()
-                                    fun main3() = runBlocking { // this: CoroutineScope
+                                        val loadDBDao1 = db.loadDao().getAll()
+                                        fun main3() = runBlocking { // this: CoroutineScope
 
-                                        launch {
+                                            launch {
 
-                                            loads.swapList(loadDBDao1)
+                                                loads.swapList(loadDBDao1)
 
-                                        }}
+                                            }
+                                        }
 
-                                    main3()
+                                        main3()
                                     }
-
-
-
-
-
-
 
 
 //refresh
@@ -365,16 +413,16 @@ fun AlertDialogSample() {
 
                                     fun main2() = runBlocking { // this: CoroutineScope
 
-                                        val db = Room.databaseBuilder(
-                                            context,
-                                            LoadDB::class.java, "load_barbells_db"
-                                        ).build()
+//                                        val db = Room.databaseBuilder(
+//                                            context,
+//                                            LoadDB::class.java, "load_barbells_db"
+//                                        ).build()
 
 
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            val loadDBDao = db.loadDao().getAll()
-                                            val list: List<LoadItem> = loadDBDao
-                                         //   Log.v("testo", "m " + (list.get(0).name))
+                                            //val loadDBDao = db.loadDao().getAll()
+                                            //val list: List<LoadItem> = loadDBDao
+                                            //   Log.v("testo", "m " + (list.get(0).name))
                                             //  Toast.makeText(context,"test",Toast.LENGTH_LONG).show()
                                         }
 
@@ -408,7 +456,7 @@ fun AlertDialogSample() {
                             Text(text = "dodaj gryf")
                         },
                         text = {
-                            Column() {
+                            Column {
 
 
                                 TextField(
@@ -455,28 +503,109 @@ fun AlertDialogSample() {
             }
 
 
-            Row() {
+            Row(Modifier.fillMaxHeight(0.9f)) {
                 Column(
                     Modifier
                         .weight(1f)
                         .background(Blue)
+
                         .verticalScroll(rememberScrollState())
                 ) {
                     loads.forEach { load ->
                         LoadRow(load)
                     }
                 }
+
+
+
+
                 Column(
                     Modifier
+                        .fillMaxWidth(2f)
                         .weight(2f)
-                        .background(Yellow)
-                        .verticalScroll(rememberScrollState())
                 ) {
-                    barbells.forEach { barbells ->
-                        LoadRow2(barbells)
+
+
+                    Row(
+                        Modifier
+                            .fillMaxHeight(0.5f)
+                            .fillMaxWidth(2f)
+                            .weight(2f)
+                            .background(Color.Green)
+
+                    ) {
+                        Text("GRYF 1")
+
                     }
+
+
+                    Row(
+                        Modifier
+                            .fillMaxHeight(1f)
+                            .fillMaxWidth(2f)
+                            .weight(2f)
+                            .background(Color.Magenta)
+
+                    ) {
+                        Text("GRYF 2")
+
+                    }
+
+                }
+
+//                Column(
+//                    Modifier
+//                        .weight(2f)
+//                        .height(200.dp)
+//                        .background(Color.Magenta)
+//                        .verticalScroll(rememberScrollState())
+//                ) {
+//
+//                }
+
+
+            }
+
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                //  verticalArrangement = Arrangement.Bottom
+
+
+            ) {
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "G1")
+                }
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "G2")
+                }
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "G3")
+                }
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "G4")
+                }
+                Button(
+                    onClick = {},
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                ) {
+                    Text(text = "G5")
                 }
             }
+
+
         }
 
 
