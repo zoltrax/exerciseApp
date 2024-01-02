@@ -21,4 +21,17 @@ interface LoadDBDao {
     suspend fun delete(item:LoadItem)
     @Query("DELETE FROM load_list")
     suspend fun deleteAllTodos()
+
+    @Query("SELECT * from load_necks")
+    fun getAllNecks(): List<LoadNeck>
+    @Query("SELECT * from load_necks where itemId = :id")
+    fun getNeckById(id: Int) : LoadNeck?
+    @Insert
+    suspend fun insertNeck(item:LoadNeck)
+    @Update
+    suspend fun updateNeck(item:LoadNeck)
+    @Delete
+    suspend fun deleteNeck(item:LoadNeck)
+    @Query("DELETE FROM load_necks")
+    suspend fun deleteAllBarbells()
 }

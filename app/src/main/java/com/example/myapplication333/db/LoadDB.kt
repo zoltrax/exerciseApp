@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [LoadItem::class], version = 1)
+@Database(entities = [LoadItem::class,LoadNeck::class], version = 3)
 abstract class LoadDB : RoomDatabase() {
     abstract fun loadDao(): LoadDBDao
     companion object {

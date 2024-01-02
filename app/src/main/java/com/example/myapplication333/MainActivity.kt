@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.room.Room
 import com.example.myapplication333.db.LoadDB
 import com.example.myapplication333.db.LoadItem
+import com.example.myapplication333.db.LoadNeck
 import com.example.myapplication333.ui.theme.MyApplication333Theme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -483,6 +484,27 @@ fun AlertDialogSample() {
 
                                 onClick = {
                                     openDialog2.value = false
+
+                                    val neck = LoadNeck(null, name, weight)
+
+                                    val loadDBDao = db.loadDao()
+
+                                    fun main() = runBlocking { // this: CoroutineScope
+                                        launch {
+                                            loadDBDao.insertNeck(neck)
+                                            name = ""
+                                            weight = ""
+
+                                            //   var loding:LoadItem= LoadItem(444,"dd",1.0f)
+
+
+                                            //   _loads.add(loding)
+                                        }
+                                    }
+
+                                    main()
+
+
                                 }) {
                                 Text("dodaj")
                             }
